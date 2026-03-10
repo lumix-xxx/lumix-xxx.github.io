@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lumix - RP Vanilla Minecraft Server</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        /*
+         * ═══════════════════════════════════════════════════════════════
+         * ШРИФТ: Dune Rise
+         * 1. Скачайте с: https://ru.fonts2u.com/dune-rise.шрифт
+         * 2. Создайте папку fonts/ рядом с этим файлом
+         * 3. Положите туда DuneRise.otf и/или DuneRise.ttf
+         * ═══════════════════════════════════════════════════════════════
+         */
+        @font-face {
+            font-family: 'Dune Rise';
+            src: url('fonts/DuneRise.otf') format('opentype'),
+                 url('fonts/DuneRise.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+            font-display: swap;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --black: #050505;
+            --black-light: #0f0f0f;
+            --black-lighter: #1a1a1a;
+            --gray-dark: #262626;
+            --gray: #404040;
+            --gray-light: #737373;
+            --gray-lighter: #a3a3a3;
+            --white: #ffffff;
+            
+            --gold: #c9a962;
+            --gold-light: #e8c87a;
+            --gold-dark: #a68b4b;
+            --gold-muted: #7d6b3a;
+            
+            --transition-fast: 0.15s ease;
+            --transition-normal: 0.25s ease;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--black);
+            color: var(--white);
+            min-height: 100vh;
+            overflow-x: hidden;
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            font-weight: 400;
+        }
+
+        /* Сетка на фоне */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(201, 169, 98, 0.08) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(201, 169, 98, 0.08) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-image: 
+                linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100px 100px;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* Навигация */
+        .navbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            background: rgba(5, 5, 5, 0.95);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--gray-dark);
+            z-index: 1000;
+            padding: 1rem 1.5rem;
+        }
+
+        .navbar::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-muted), transparent);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Dune Rise', 'Rajdhani', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 400;
+            color: var(--gold);
+            text-decoration: none;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            transition: all var(--transition-fast);
+            position: relative;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 100%; height: 2px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform var(--transition-normal);
+        }
+
+        .logo:hover { opacity: 0.8; }
+        .logo:hover::after { transform: scaleX(1); }
+
+        .nav-links {
+            display: flex;
+            gap: 0.5rem;
+            list-style: none;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--gray-lighter);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.813rem;
+            padding: 0.5rem 1rem;
+            transition: all var(--transition-fast);
+            cursor: pointer;
+            letter-spacing: 1px;
+            position: relative;
+            font-family: 'Rajdhani', sans-serif;
+            text-transform: uppercase;
+        }
+
+        .nav-link::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 2px; height: 0;
+            background: var(--gold);
+            transition: height var(--transition-fast);
+        }
+
+        .nav-link:hover {
+            color: var(--gold);
+            background: var(--black-lighter);
+        }
+
+        .nav-link:hover::before { height: 100%; }
+
+        .nav-link.active {
+            color: var(--gold);
+            background: var(--black-lighter);
+        }
+
+        .nav-link.active::before { height: 100%; }
+
+        /* Мобильное меню */
+        .mobile-menu-btn {
+            display: none;
+            flex-direction: column;
+            gap: 5px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0.5rem;
+            z-index: 1001;
+        }
+
+        .mobile-menu-btn span {
+            width: 20px;
+            height: 1.5px;
+            background: var(--white);
+            transition: all 0.3s ease;
+        }
+
+        .mobile-menu-btn.active span:nth-child(1) {
+            transform: rotate(45deg) translate(5px, 5px);
+        }
+
+        .mobile-menu-btn.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .mobile-menu-btn.active span:nth-child(3) {
+            transform: rotate(-45deg) translate(5px, -5px);
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 62px; left: 0; right: 0;
+            background: var(--black);
+            padding: 1rem;
+            border-bottom: 1px solid var(--gray-dark);
+            z-index: 999;
+        }
+
+        .mobile-nav.active { display: block; }
+
+        .mobile-nav .nav-link {
+            display: block;
+            padding: 0.875rem 1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        /* Hero секция */
+        .hero {
+            position: relative;
+            min-height: 65vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-top: 62px;
+            padding: 3rem 1.5rem;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-muted), transparent);
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+            max-width: 650px;
+            padding: 1rem;
+        }
+
+        .hero-title {
+            font-family: 'Dune Rise', 'Rajdhani', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 400;
+            line-height: 1;
+            margin-bottom: 1rem;
+            color: var(--gold);
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            position: relative;
+            display: inline-block;
+        }
+
+        .hero-title::before {
+            content: '';
+            position: absolute;
+            top: -12px; left: 50%;
+            transform: translateX(-50%);
+            width: 80px; height: 2px;
+            background: var(--gold);
+        }
+
+        .hero-title::after {
+            content: '';
+            position: absolute;
+            bottom: -12px; left: 50%;
+            transform: translateX(-50%);
+            width: 80px; height: 2px;
+            background: var(--gold);
+        }
+
+        .hero-subtitle {
+            font-size: clamp(0.938rem, 2.5vw, 1.125rem);
+            color: var(--gray-lighter);
+            margin-bottom: 1rem;
+            margin-top: 1.5rem;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* Бейдж сервера */
+        .server-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 1.25rem;
+            background: var(--black-lighter);
+            border: 1px solid var(--gray-dark);
+            padding: 0.875rem 1.5rem;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            position: relative;
+            margin-top: 1.5rem;
+        }
+
+        .server-badge::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 2px;
+            background: var(--gold);
+            transform: scaleX(0);
+            transition: transform var(--transition-normal);
+        }
+
+        .server-badge:hover {
+            border-color: var(--gold-muted);
+            background: var(--black-lighter);
+        }
+
+        .server-badge:hover::before { transform: scaleX(1); }
+
+        .server-badge-left {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+        }
+
+        .server-ip {
+            font-family: 'Dune Rise', 'Rajdhani', sans-serif;
+            font-size: 0.813rem;
+            font-weight: 400;
+            color: var(--gold);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .server-badge-hint {
+            font-size: 0.688rem;
+            color: var(--gray-light);
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .server-badge-divider {
+            width: 1px;
+            height: 32px;
+            background: var(--gray-dark);
+        }
+
+        .server-badge-right {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            min-width: 60px;
+        }
+
+        .server-online-label {
+            font-size: 0.625rem;
+            color: var(--gold-muted);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+        }
+
+        .server-online-count {
+            font-family: 'Dune Rise', 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--white);
+            letter-spacing: 2px;
+        }
+
+        /* Основной контент */
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 4rem 1.5rem;
+        }
+
+        .page { display: none; }
+        .page.active { display: block; }
+
+        /* Заголовки секций */
+        .section-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--gray-dark);
+            position: relative;
+        }
+
+        .section-header::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0;
+            width: 50px; height: 2px;
+            background: var(--gold);
+        }
+
+        .section-title {
+            font-family: 'Dune Rise', 'Rajdhani', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 400;
+            color: var(--gold);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Описание сервера */
+        .server-description {
+            background: var(--black-light);
+            border: 1px solid var(--gray-dark);
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .server-description p {
+            font-size: 1.063rem;
+            color: var(--gray-lighter);
+            line-height: 1.8;
+            max-width: 700px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .server-description strong {
+            color: var(--gold);
+            font-weight: 600;
+        }
+
+        .server-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 1.5rem 1rem;
+            background: var(--black-lighter);
+            border: 1px solid var(--gray-dark);
+            transition: all var(--transition-fast);
+        }
+
+        .feature-item:hover {
+            border-color: var(--gold-muted);
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--gold);
+            font-weight: 300;
+        }
+
+        .feature-title {
+            font-family: 'Dune Rise', 'Rajdhani', sans-serif;
+            font-size: 0.813rem;
+            font-weight: 400;
+            color: var(--gold);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 0.5rem;
+        }
+
+        .feature-text {
+            font-size: 0.875rem;
+            color: var(--gray-light);
+        }
+
+        /* Страница карты */
+        .map-container {
+            background: var(--black-light);
+            overflow: hidden;
+            border: 1px solid var(--gray-dark);
+        }
+
+        .map-header {
+            padding: 1.125rem 1.5rem;
+            border-bottom: 1px solid var(--gray-dark);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .map-title {
+            font-family: 'Dune Rise', 'Rajdhani', sans-serif;
+            font-size: 0.875rem;
+            font-weight: 400;
+            color: var(--gold);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .map-controls {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .map-btn {
+            padding: 0.5rem 1rem;
+            background: var(--black-lighter);
+            border: 1px solid var(--gray-dark);
+            color: var(--white);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            font-weight: 500;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .map-btn:hover {
+            background: var(--gray-dark);
+            border-color: var(--gold-muted);
+            color: var(--gold);
+        }
+
+        .map-frame {
+            width: 100%;
+            height: calc(100vh - 280px);
+            min-height: 500px;
+            border: none;
+            background: var(--black);
+        }
+
+        .map-placeholder {
+            width: 100%;
+            height: calc(100vh - 280px);
+            min-height: 500px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: var(--black);
+            color: var(--gray-lighter);
+            padding: 2rem;
+            text-align: center;
+            border-top: 1px solid var(--gray-dark);
+        }
+
+        .map-placeholder-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.25rem;
+            opacity: 0.25;
+            color: var(--gold);
+        }
+
+        .map-placeholder-title {
+            font-family: 'Dune Rise', 'Rajdhani', sans-serif;
+            font-size: 1rem;
+            font-weight: 400;
+            color: var(--gold);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .map-placeholder-text {
+            font-size: 0.813rem;
+            max-width: 350px;
+            color: var(--gray-light);
+        }
+
+        /* Футер */
+        .footer {
+            background: var(--black-light);
+            border-top: 1px solid var(--gray-dark);
+            padding: 3rem 1.5rem;
+            margin-top: 4rem;
+        }
+
+        .footer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--gold-muted), transparent);
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 2.5rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .footer-link {
+            color: var(--gray-light);
+            text-decoration: none;
+            font-size: 0.688rem;
+            font-weight: 500;
+            transition: color var(--transition-fast);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            position: relative;
+            font-family: 'Rajdhani', sans-serif;
+        }
+
+        .footer-link::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 1px;
+            background: var(--gold);
+            transition: width var(--transition-fast);
+        }
+
+        .footer-link:hover { color: var(--gold); }
+        .footer-link:hover::after { width: 100%; }
+
+        .footer-text {
+            color: var(--gray);
+            font-size: 0.688rem;
+            font-weight: 400;
+        }
+
+        /* Уведомления */
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            left: 2rem;
+            max-width: 320px;
+            margin: 0 auto;
+            background: var(--black-lighter);
+            color: var(--gold);
+            padding: 0.875rem 1.25rem;
+            transform: translateY(100px);
+            opacity: 0;
+            transition: all var(--transition-normal);
+            z-index: 2000;
+            border: 1px solid var(--gold-muted);
+        }
+
+        .toast.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .toast-message {
+            font-weight: 500;
+            font-size: 0.813rem;
+            text-align: center;
+            color: var(--gold);
+            font-family: 'Rajdhani', sans-serif;
+            letter-spacing: 0.5px;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(201, 169, 98, 0.3);
+            border-top-color: var(--gold);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .navbar { padding: 0.875rem 1rem; }
+            .nav-links { display: none; }
+            .mobile-menu-btn { display: flex; }
+            .hero { min-height: 55vh; padding: 2rem 1rem; }
+            
+            .server-badge {
+                flex-direction: column;
+                gap: 0.75rem;
+                padding: 1.125rem 1.5rem;
+            }
+            
+            .server-badge-divider {
+                width: 100%;
+                height: 1px;
+            }
+            
+            .server-badge-right {
+                flex-direction: row;
+                gap: 0.5rem;
+                min-width: auto;
+            }
+            
+            .main-content { padding: 3rem 1rem; }
+            .server-description { padding: 1.5rem; }
+            .server-features { grid-template-columns: 1fr; gap: 1rem; }
+            
+            .map-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .map-controls { width: 100%; }
+            .map-btn { flex: 1; justify-content: center; }
+            .map-frame, .map-placeholder { height: calc(100vh - 320px); min-height: 400px; }
+            .footer-links { flex-direction: column; gap: 1rem; }
+            
+            .toast {
+                left: 1rem; right: 1rem;
+                max-width: none;
+                bottom: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero-title { font-size: 2.25rem; letter-spacing: 4px; }
+            .logo { font-size: 1.25rem; letter-spacing: 2px; }
+            .section-title { font-size: 1.063rem; letter-spacing: 2px; }
+            .server-ip { font-size: 0.75rem; }
+            .server-online-count { font-size: 0.938rem; }
+        }
+
+        a:focus-visible, button:focus-visible {
+            outline: 1px solid var(--gold);
+            outline-offset: 2px;
+        }
+
+        ::selection {
+            background: var(--gold);
+            color: var(--black);
+        }
+    </style>
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="#" class="logo" onclick="showPage('home'); return false;">LUMIX</a>
+            <ul class="nav-links">
+                <li><a class="nav-link active" data-page="home" onclick="showPage('home')">Home</a></li>
+                <li><a class="nav-link" data-page="map" onclick="showPage('map')">Map</a></li>
+            </ul>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()" aria-label="Menu">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Мобильное меню -->
+    <div class="mobile-nav" id="mobile-nav">
+        <a class="nav-link" onclick="showPage('home'); toggleMobileMenu()">Home</a>
+        <a class="nav-link" onclick="showPage('map'); toggleMobileMenu()">Map</a>
+    </div>
+
+    <!-- Hero секция -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">LUMIX</h1>
+            <p class="hero-subtitle">RP Vanilla Minecraft Server</p>
+            <div class="server-badge" onclick="copyIP()" role="button" tabindex="0">
+                <div class="server-badge-left">
+                    <span class="server-ip" id="server-ip">lumix.playmc.tech</span>
+                    <span class="server-badge-hint">Нажмите чтобы скопировать</span>
+                </div>
+                <div class="server-badge-divider"></div>
+                <div class="server-badge-right">
+                    <span class="server-online-label">Players</span>
+                    <span class="server-online-count" id="server-count">
+                        <span class="loading-spinner"></span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Основной контент -->
+    <main class="main-content">
+        <!-- Главная страница -->
+        <div id="home-page" class="page active">
+            <div class="section-header">
+                <h2 class="section-title">Welcome</h2>
+            </div>
+
+            <div class="server-description">
+                <p>
+                    <strong>Lumix</strong> — это уникальный RP ванильный сервер Minecraft, где вы сможете погрузиться в аутентичный опыт выживания с элементами ролевой игры. 
+                    Постройте свою империю, заключайте союзы, торгуйте с другими игроками и создавайте свою собственную историю в нашем тщательно проработанном мире. 
+                    Никаких pay-to-win механик — только чистый ванильный геймплей, улучшенный функциями для удобства и активным сообществом.
+                </p>
+
+                <div class="server-features">
+                    <div class="feature-item">
+                        <div class="feature-icon">◆</div>
+                        <div class="feature-title">Roleplay</div>
+                        <div class="feature-text">Погружающий RP опыт</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">◆</div>
+                        <div class="feature-title">Vanilla</div>
+                        <div class="feature-text">Чистое выживание</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">◆</div>
+                        <div class="feature-title">Fair Play</div>
+                        <div class="feature-text">Без pay-to-win</div>
+                    </div>
+                    <div class="feature-item">
+                        <div class="feature-icon">◆</div>
+                        <div class="feature-title">Community</div>
+                        <div class="feature-text">Активные игроки</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Страница карты -->
+        <div id="map-page" class="page">
+            <div class="section-header">
+                <h2 class="section-title">Map</h2>
+            </div>
+            
+            <div class="map-container">
+                <div class="map-header">
+                    <h3 class="map-title">Dynmap</h3>
+                    <div class="map-controls">
+                        <button class="map-btn" onclick="refreshMap()">Обновить</button>
+                        <button class="map-btn" onclick="openInNewTab()">Открыть</button>
+                    </div>
+                </div>
+                <div id="map-content">
+                    <div class="map-placeholder" id="map-placeholder">
+                        <div class="map-placeholder-icon">🗺</div>
+                        <div class="map-placeholder-title">Server Map</div>
+                        <p class="map-placeholder-text">Нажмите "Обновить" или "Открыть" для загрузки Dynmap</p>
+                    </div>
+                    <iframe 
+                        id="dynmap-frame"
+                        class="map-frame"
+                        src="about:blank"
+                        title="Dynmap"
+                        style="display: none;"
+                    ></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Футер -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-links">
+                <a href="#" class="footer-link">Discord</a>
+                <a href="#" class="footer-link">Telegram</a>
+            </div>
+            <p class="footer-text">© 2024 Lumix RP Server</p>
+        </div>
+    </footer>
+
+    <!-- Уведомления -->
+    <div class="toast" id="toast">
+        <span class="toast-message" id="toast-message">IP скопирован</span>
+    </div>
+
+    <script>
+        // Конфигурация сервера
+        const SERVER_CONFIG = {
+            ip: 'lumix.playmc.tech',
+            dynmapUrl: 'http://lumix.playmc.tech:8123'
+        };
+
+        // Навигация по страницам
+        function showPage(pageName) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.dataset.page === pageName) {
+                    link.classList.add('active');
+                }
+            });
+
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            document.getElementById(`${pageName}-page`).classList.add('active');
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Мобильное меню
+        function toggleMobileMenu() {
+            const btn = document.querySelector('.mobile-menu-btn');
+            const nav = document.getElementById('mobile-nav');
+            btn.classList.toggle('active');
+            nav.classList.toggle('active');
+        }
+
+        // Копирование IP
+        function copyIP() {
+            navigator.clipboard.writeText(SERVER_CONFIG.ip).then(() => {
+                showToast('IP скопирован в буфер обмена');
+            }).catch(() => {
+                const textArea = document.createElement('textarea');
+                textArea.value = SERVER_CONFIG.ip;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showToast('IP скопирован в буфер обмена');
+            });
+        }
+
+        // Показ уведомлений
+        function showToast(message) {
+            const toast = document.getElementById('toast');
+            const toastMessage = document.getElementById('toast-message');
+            toastMessage.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 2500);
+        }
+
+        // Получение статуса сервера (реальный онлайн)
+        async function fetchServerStatus() {
+            const countElement = document.getElementById('server-count');
+            
+            try {
+                const response = await fetch(`https://api.mcsrvstat.us/3/${SERVER_CONFIG.ip}`);
+                const data = await response.json();
+                
+                if (data.online) {
+                    countElement.textContent = data.players.online;
+                } else {
+                    countElement.textContent = 'Offline';
+                    countElement.style.color = 'var(--gray-light)';
+                }
+            } catch (error) {
+                console.error('Failed to fetch server status:', error);
+                countElement.textContent = '—';
+            }
+        }
+
+        // Загрузка Dynmap
+        function loadDynmap() {
+            const frame = document.getElementById('dynmap-frame');
+            const placeholder = document.getElementById('map-placeholder');
+            frame.src = SERVER_CONFIG.dynmapUrl;
+            frame.style.display = 'block';
+            placeholder.style.display = 'none';
+        }
+
+        // Обновление карты
+        function refreshMap() {
+            const frame = document.getElementById('dynmap-frame');
+            showToast('Загрузка карты...');
+            frame.src = 'about:blank';
+            setTimeout(() => {
+                loadDynmap();
+            }, 100);
+        }
+
+        // Открыть карту в новой вкладке
+        function openInNewTab() {
+            window.open(SERVER_CONFIG.dynmapUrl, '_blank');
+            showToast('Карта открыта в новой вкладке');
+        }
+
+        // Инициализация
+        document.addEventListener('DOMContentLoaded', () => {
+            fetchServerStatus();
+            setInterval(fetchServerStatus, 30000);
+
+            const serverBadge = document.querySelector('.server-badge');
+            serverBadge.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    copyIP();
+                }
+            });
+        });
+
+        // Закрытие мобильного меню при изменении размера
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                document.querySelector('.mobile-menu-btn').classList.remove('active');
+                document.getElementById('mobile-nav').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
+
